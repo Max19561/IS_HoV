@@ -1,1 +1,12 @@
-1
+from math import pi
+r1=float(input())
+r2=float(input())
+s1=pi*r1**2
+s2=pi*r2**2
+if r1>r2 or r1==r2:
+    max=s1
+    min=s2
+elif r2>r1:
+    max,min=s2,s1
+s=max-min
+print(s)
