@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import filedialog
 from PIL import Image, ImageTk, ImageDraw
 import os
+from tkinter.messagebox import showerror, showwarning, showinfo
 win = Tk()
 win.state("zoomed")
 win.minsize(900,600)
@@ -71,16 +72,27 @@ def clear_entry(event, entry,pht):
 def add_entry(event, entry,pht):
     if entry.get()=='':
         entry.insert(0,pht)
-def open_file():
-    filepath = filedialog.askopenfilename()
-    if filepath != "":
-        with open(filepath, "r") as file:
-            print(filepath)
+def registration():
+    login=input_reg_login.get()
+    password=input_reg_password.get()
+    for i in range (len(login_arr)):
+        if any(login in sublist for sublist in login_arr)==True:
+            showwarning('Error','Данный пользователь уже зарегистрирован')
+            break
+        else:
+            login_arr.append([login,password])
+            showinfo('Succes',f'Пользователь {login} успешно зарегистророван')
+            break
 
-im = Image.open('assets/logo.png')
-im = crop(im, size)
-im.putalpha(prepare_mask(size, 4))
-im.save('image_output.png')
+def authorization():
+    i=0
+    for i in range (len(login_arr)):
+        print(login_arr[i][0])
+        i+=1
+
+#arrays
+login_arr=[['admin','12345678']]
+
 #frames header
 frame_head=Frame()
 frame_head.configure(bg="#04396C")
@@ -204,7 +216,7 @@ input_reg_rpw=Entry(frame_reg, foreground="grey")
 input_reg_rpw.place(relx=0.2, rely=0.52,relwidth=0.6,relheight=0.035)
 input_reg_rpw.insert(0, "Повтор пароля")
 
-btn_reg=Button(frame_reg,text='Зарегистрироваться',font='a 12',command=open_file)
+btn_reg=Button(frame_reg,text='Зарегистрироваться',font='a 12',command=registration)
 btn_reg.configure(bg='#DEC585',fg='#2F51DC')
 btn_reg.place(relwidth=0.25,relheight=0.05,relx=0.375,rely=0.6)
 
@@ -223,9 +235,9 @@ input_auth_password=Entry(frame_auth, foreground="grey")
 input_auth_password.place(relx=0.2, rely=0.28,relwidth=0.6,relheight=0.035)
 input_auth_password.insert(0, "Пароль")
 
-btn_reg=Button(frame_auth,text='Войти',font='a 12')
-btn_reg.configure(bg='#DEC585',fg='#2F51DC')
-btn_reg.place(relwidth=0.25,relheight=0.05,relx=0.375,rely=0.36)
+btn_auth=Button(frame_auth,text='Войти',font='a 12',command=authorization)
+btn_auth.configure(bg='#DEC585',fg='#2F51DC')
+btn_auth.place(relwidth=0.25,relheight=0.05,relx=0.375,rely=0.36)
 
 label_havent_acc=Label(frame_auth,anchor='w',text="Ещё нет аккаунта? Создать",bg='#3B89D2',fg='#00CCFF',font='a 11')
 label_havent_acc.place(relwidth=0.25,relheight=0.05,relx=0.375,rely=0.41)
@@ -236,7 +248,7 @@ label_reg_header.place(relwidth=1,relheight=0.05,rely=0.02)
 
 #binds
 label_settings.bind("<Button-1>",reg_open)
-label_prof.bind("<Button-1>",lk_open)
+label_prof.bind("<Button-1>",reg_open)
 input_reg_email.bind("<FocusIn>", lambda event: clear_entry(event, input_reg_email, "Электронная почта"))
 input_reg_email.bind("<FocusOut>", lambda event: add_entry(event, input_reg_email, "Электронная почта"))
 input_reg_login.bind("<FocusIn>", lambda event: clear_entry(event, input_reg_login, "Логин"))
